@@ -2,63 +2,59 @@ import { spawn } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
+import { createServer } from 'http';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+console.log('[Server] Starting custom entry point...');
+
 // --- FIX ROUTE PATHS ON STARTUP ---
-// This ensures that the API routes expected by React Router server build exist.
-// Hostinger/Linux environment often fails to preserve this structure during build artifact copy.
-async function ensureApiRoutesExist() {
+// (Mantenemos esta parte vital que ya teníamos)
+function ensureApiRoutesExist() {
   const targetDir = join(__dirname, 'build', 'server', 'src', 'app', 'api');
   const sourceDir = join(__dirname, 'src', 'app', 'api');
-
-  console.log(`[Server Fix] Checking API routes directory: ${targetDir}`);
-
   if (!fs.existsSync(targetDir)) {
-    console.log(`[Server Fix] Target directory missing. Attempting to copy from source...`);
     try {
       if (fs.existsSync(sourceDir)) {
         fs.cpSync(sourceDir, targetDir, { recursive: true });
-        console.log(`[Server Fix] ✅ API routes copied successfully.`);
+        console.log(`[Server Fix] ✅ API routes copied.`);
       } else {
-        console.warn(`[Server Fix] ⚠️ Source API directory not found at ${sourceDir}. Routes may fail.`);
-        // Create empty directory to prevent crash
         fs.mkdirSync(targetDir, { recursive: true });
-        console.log(`[Server Fix] Created empty directory to prevent startup crash.`);
+        console.log(`[Server Fix] Created empty directory.`);
       }
     } catch (err) {
-      console.error(`[Server Fix] ❌ Failed to copy API routes:`, err);
+      console.error(`[Server Fix] Error copying routes:`, err);
     }
-  } else {
-    console.log(`[Server Fix] API routes directory already exists.`);
   }
 }
-
-// execute fix immediately
 ensureApiRoutesExist();
 
-// --- START SERVER ---
-console.log('Starting application via npm start...');
+// --- ATTEMPT TO START APP VIA REACT-ROUTER-SERVE ---
+// This is what 'npm start' does usually.
+const serverBuildPath = join(__dirname, 'build', 'server', 'index.js');
 
-// Use 'npm start' or node directly depending on environment
-// We point to the build output
-const command = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+if (fs.existsSync(serverBuildPath)) {
+  console.log('[Server] Found build/server/index.js, launching...');
 
-const child = spawn(command, ['run', 'start'], {
-  stdio: 'inherit',
-  cwd: __dirname,
-  env: {
-    ...process.env,
-    NODE_ENV: 'production',
-  }
-});
+  // We launch the actual server process
+  const command = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  const child = spawn(command, ['run', 'start'], {
+    stdio: 'inherit',
+    cwd: __dirname,
+    env: { ...process.env, NODE_ENV: 'production', PORT: process.env.PORT || '3000' }
+  });
 
-child.on('error', (err) => {
-  console.error('Failed to start application:', err);
-  process.exit(1);
-});
+  child.on('error', (err) => console.error('[Server] Failed to start:', err));
+} else {
+  // FALLBACK: If build is missing, serve a simple error page so we don't get 403
+  console.error('[Server] CRITICAL: build/server/index.js not found!');
 
-child.on('close', (code) => {
-  console.log(`Application exited with code ${code}`);
-  process.exit(code);
-});
+  const server = createServer((req, res) => {
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end('Deployment Error: build/server/index.js is missing on the server. Please check deployment logs.');
+  });
+
+  server.listen(process.env.PORT || 3000, () => {
+    console.log('[Server] Fallback error server running');
+  });
+}
