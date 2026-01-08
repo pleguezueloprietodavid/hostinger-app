@@ -8,7 +8,7 @@
 	},
 	"scripts": {
 		"dev": "react-router dev",
-		"build": "echo 'Build skipped - using pre-built artifacts'",
+		"build": "npm install --legacy-peer-deps",
 		"start": "react-router-serve build/server/index.js",
 		"typecheck": "react-router typegen && tsc --noEmit"
 	},
