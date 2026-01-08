@@ -1,0 +1,64 @@
+{
+  "_PolymorphicComponent-CcgnNXPT.js": {
+    "file": "assets/PolymorphicComponent-CcgnNXPT.js",
+    "name": "PolymorphicComponent",
+    "imports": [
+      "_chunk-JMJ3UQ3L-DZE9hlBU.js"
+    ]
+  },
+  "_chunk-JMJ3UQ3L-DZE9hlBU.js": {
+    "file": "assets/chunk-JMJ3UQ3L-DZE9hlBU.js",
+    "name": "chunk-JMJ3UQ3L"
+  },
+  "_index-BIVOGMjC.js": {
+    "file": "assets/index-BIVOGMjC.js",
+    "name": "index",
+    "imports": [
+      "_chunk-JMJ3UQ3L-DZE9hlBU.js"
+    ]
+  },
+  "node_modules/@react-router/dev/dist/config/defaults/entry.client.tsx": {
+    "file": "assets/entry.client-ChzRRzwQ.js",
+    "name": "entry.client",
+    "src": "node_modules/@react-router/dev/dist/config/defaults/entry.client.tsx",
+    "isEntry": true,
+    "imports": [
+      "_chunk-JMJ3UQ3L-DZE9hlBU.js",
+      "_index-BIVOGMjC.js"
+    ]
+  },
+  "src/app/__create/not-found.tsx?__react-router-build-client-route": {
+    "file": "assets/not-found-CgcIAdBH.js",
+    "name": "not-found",
+    "src": "src/app/__create/not-found.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_PolymorphicComponent-CcgnNXPT.js",
+      "_chunk-JMJ3UQ3L-DZE9hlBU.js"
+    ]
+  },
+  "src/app/page.jsx?__react-router-build-client-route": {
+    "file": "assets/page-CS_qa4e8.js",
+    "name": "page",
+    "src": "src/app/page.jsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_PolymorphicComponent-CcgnNXPT.js",
+      "_chunk-JMJ3UQ3L-DZE9hlBU.js"
+    ]
+  },
+  "src/app/root.tsx?__react-router-build-client-route": {
+    "file": "assets/root-DuwAcfr1.js",
+    "name": "root",
+    "src": "src/app/root.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_PolymorphicComponent-CcgnNXPT.js",
+      "_chunk-JMJ3UQ3L-DZE9hlBU.js",
+      "_index-BIVOGMjC.js"
+    ],
+    "css": [
+      "assets/root-_pIybygs.css"
+    ]
+  }
+}
