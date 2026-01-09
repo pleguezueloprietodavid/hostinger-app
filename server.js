@@ -1,13 +1,14 @@
 
 const http = require('http');
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // platform will override this
+const host = '0.0.0.0';
 
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('¡HOLA! Si lees esto, el servidor funciona. Puerto: ' + PORT);
+  res.end('Hello World\n');
 });
 
-server.listen(PORT, () => {
-  console.log('Server running on port ' + PORT);
+server.listen(port, host, () => {
+  console.log(`Server running at http://${host}:${port}/`);
 });

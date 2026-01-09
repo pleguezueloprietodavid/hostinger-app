@@ -1,13 +1,14 @@
 
-import { createServer } from 'http';
+const http = require('http');
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // platform will override this
+const host = '0.0.0.0';
 
-const server = createServer((req, res) => {
+const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end(`¡FUNCIONA! Hostinger está conectado al puerto: ${PORT}`);
+  res.end('Hello World\n');
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server listening on port ${PORT}`);
+server.listen(port, host, () => {
+  console.log(`Server running at http://${host}:${port}/`);
 });
