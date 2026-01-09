@@ -9,7 +9,7 @@
 	"scripts": {
 		"dev": "react-router dev",
 		"build": "npm install --legacy-peer-deps",
-		"start": "node server.js",
+		"start": "node fix-routes.js && react-router-serve build/server/index.js",
 		"typecheck": "react-router typegen && tsc --noEmit"
 	},
 	"dependencies": {
