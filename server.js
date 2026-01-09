@@ -6,12 +6,12 @@ import fs from 'node:fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// --- CRITICAL FOR HOSTINGER: USE THE ASSIGNED PORT ---
+// --- CONFIG ---
 const PORT = process.env.PORT || 3000;
 
-console.log(`[Server] Starting application on port ${PORT}...`);
+console.log(`[Server] Wrapper starting. Target Port: ${PORT}`);
 
-// Ensure API structure matches expected output (Fix for ENOENT)
+// --- FIX ROUTE PATHS ---
 function ensureApiRoutesExist() {
   const targetDir = join(__dirname, 'build', 'server', 'src', 'app', 'api');
   const sourceDir = join(__dirname, 'src', 'app', 'api');
@@ -27,24 +27,30 @@ function ensureApiRoutesExist() {
 }
 ensureApiRoutesExist();
 
-// --- LAUNCH THE REACT ROUTER SERVER ---
-// We start the build directly using node, passing the PORT env var explicitly
-const serverBuildPath = join(__dirname, 'build', 'server', 'index.js');
-const command = process.platform === 'win32' ? 'node.exe' : 'node';
+// --- LAUNCH REAL SERVER ---
+// We use 'npx react-router-serve' to correctly launch the build artifact.
+// Using 'node' directly might fail if the artifact isn't self-contained.
+const command = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+const args = ['react-router-serve', 'build/server/index.js'];
 
-const child = spawn(command, [serverBuildPath], {
+console.log(`[Server] Executing: ${command} ${args.join(' ')}`);
+
+const child = spawn(command, args, {
   stdio: 'inherit',
   cwd: __dirname,
   env: {
     ...process.env,
     NODE_ENV: 'production',
-    PORT: PORT  // EXPLICITLY PASS THE HOSTINGER PORT
+    PORT: String(PORT)
   }
 });
 
 child.on('error', (err) => {
-  console.error('[Server] Failed to spawn child process:', err);
+  console.error('[Server] CRITICAL ERROR spawning server:', err);
   process.exit(1);
 });
 
-child.on('close', (code) => process.exit(code));
+child.on('close', (code) => {
+  console.log(`[Server] Process exited with code ${code}`);
+  process.exit(code);
+});
