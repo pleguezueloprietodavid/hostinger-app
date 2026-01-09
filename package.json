@@ -2,14 +2,14 @@
 	"name": "web",
 	"private": true,
 	"type": "module",
-	"main": "server.js",
+	"main": "app.js",
 	"engines": {
 		"node": ">=20.0.0"
 	},
 	"scripts": {
 		"dev": "react-router dev",
 		"build": "npm install --legacy-peer-deps",
-		"start": "node server.js",
+		"start": "node app.js",
 		"typecheck": "react-router typegen && tsc --noEmit"
 	},
 	"dependencies": {
