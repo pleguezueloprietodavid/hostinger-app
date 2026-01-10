@@ -35,9 +35,9 @@ function ensureApiRoutesExist() {
 ensureApiRoutesExist();
 
 // --- LAUNCH REAL SERVER ---
-// We use 'npx react-router-serve' to correctly launch the build artifact.
-const command = 'npx';
-const args = ['react-router-serve', 'build/server/index.js'];
+// We use the local binary directly to avoid PATH issues with npx
+const command = process.execPath; // The current 'node' executable
+const args = ['./node_modules/.bin/react-router-serve', 'build/server/index.js'];
 
 console.log(`[Server Launcher] Executing: ${command} ${args.join(' ')}`);
 
@@ -48,9 +48,10 @@ const child = spawn(command, args, {
     ...process.env,
     NODE_ENV: 'production',
     PORT: String(PORT),
-    HOST: '0.0.0.0' // Bind to all interfaces for Hostinger
+    HOST: '0.0.0.0', // Bind to all interfaces for Hostinger
+    PATH: `${dirname(process.execPath)}:${process.env.PATH}` // Add current node bin to PATH just in case
   },
-  shell: true // Important for npx on some Linux shells
+  shell: false // We are running the executable directly now
 });
 
 child.on('error', (err) => {
