@@ -8,7 +8,7 @@
 	},
 	"scripts": {
 		"dev": "react-router dev",
-		"build": "echo Skip Build",
+		"build": "react-router build",
 		"start": "node server.js",
 		"typecheck": "react-router typegen && tsc --noEmit"
 	},
